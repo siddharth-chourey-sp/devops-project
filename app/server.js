@@ -1,30 +1,35 @@
 const express = require("express");
 const mysql = require("mysql2");
+const getSecrets = require("./secrets");
 
 const app = express();
 
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: "admin",
-  password: process.env.DB_PASSWORD,
-  database: "devops_db"
-});
+async function startServer() {
+  const secrets = await getSecrets();
 
-app.get("/", (req, res) => {
-  res.send("App is running 🚀");
-});
-
-app.get("/users", (req, res) => {
-  db.query("SELECT * FROM users", (err, results) => {
-    if (err) return res.send(err);
-    res.json(results);
+  const db = mysql.createConnection({
+    host: secrets.DB_HOST,
+    user: secrets.DB_USER,
+    password: secrets.DB_PASSWORD,
+    database: secrets.DB_NAME,
   });
-});
 
-app.get("/add", (req, res) => {
-  db.query("INSERT INTO users (name) VALUES ('DevOps')", () => {
-    res.send("User added");
+  db.connect((err) => {
+    if (err) {
+      console.error("DB connection failed:", err);
+      return;
+    }
+
+    console.log("DB connected");
   });
-});
 
-app.listen(3000, () => console.log("Server running"));
+  app.get("/health", (req, res) => {
+    res.send("OK");
+  });
+
+  app.listen(3000, "0.0.0.0", () => {
+    console.log("Server running");
+  });
+}
+
+startServer();
