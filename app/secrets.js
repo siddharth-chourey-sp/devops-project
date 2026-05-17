@@ -9,7 +9,7 @@ const client = new SecretsManagerClient({
 
 async function getSecrets() {
   const command = new GetSecretValueCommand({
-    SecretId: "prod/db/credentials",
+    SecretId: "rds!db-b3177dda-59b0-4d5d-ac22-57073d9bcdd4",
   });
 
   const response = await client.send(command);

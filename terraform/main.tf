@@ -79,14 +79,14 @@ resource "aws_security_group" "rds" {
 
 }
 
+
 module "rds" {
   source = "./modules/rds"
 
   db_subnet_ids = module.vpc.private_subnets
-  vpc_id       = module.vpc.vpc_id
-  db_sg_id     = aws_security_group.rds.id
-  db_username  = var.db_user
-  db_password  = var.db_password
-  db_name      = var.db_name
+  vpc_id        = module.vpc.vpc_id
+  db_sg_id      = aws_security_group.rds.id
+  db_username   = var.db_user
+  db_name       = var.db_name
 
 }

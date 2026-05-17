@@ -15,14 +15,14 @@ resource "aws_iam_role" "ec2_iam_role" {
   })
 
   tags = {
-    Project     = "devops-project"
-    Environment = "prod"
+    Project     = var.project
+    Environment = var.environment
     ManagedBy   = "terraform"
   }
 
 }
 
-resource "aws_iam_role_policy_attachment" "ec2_ssm_role" { 
+resource "aws_iam_role_policy_attachment" "ec2_ssm_role" {
   role       = aws_iam_role.ec2_iam_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
@@ -33,8 +33,8 @@ resource "aws_iam_instance_profile" "ec2_profile" {
   role = aws_iam_role.ec2_iam_role.name
 
   tags = {
-    Project     = "devops-project"
-    Environment = "prod"
+    Project     = var.project
+    Environment = var.environment
     ManagedBy   = "terraform"
   }
 }
@@ -47,14 +47,14 @@ resource "aws_iam_policy" "secrets_policy" {
     Version = "2012-10-17",
     Statement = [{
       Effect   = "Allow",
-      Action   = "secretsmanager:GetSecretValue",
-      Resource = "${aws_secretsmanager_secret.db.arn}*"
+      Action   = ["secretsmanager:GetSecretValue"],
+      Resource = module.rds.db_secrets_arn
     }]
   })
 
   tags = {
-    Project     = "devops-project"
-    Environment = "prod"
+    Project     = var.project
+    Environment = var.environment
     ManagedBy   = "terraform"
   }
 }

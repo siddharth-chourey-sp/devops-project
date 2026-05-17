@@ -1,10 +1,9 @@
 #!/bin/bash
-set -eux
 
 # Install packages
 dnf update -y
 dnf install -y nodejs git nginx
-dnf install -y mariadb
+dnf install -y mariadb105
 
 # Enable nginx
 systemctl enable nginx
