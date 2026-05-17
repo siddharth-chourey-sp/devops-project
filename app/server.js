@@ -7,14 +7,15 @@ const app = express();
 async function startServer() {
   const secrets = await getSecrets();
 
-  const db = mysql.createConnection({
-    host: secrets.DB_HOST,
-    user: secrets.DB_USER,
-    password: secrets.DB_PASSWORD,
-    database: secrets.DB_NAME,
+  const connection = mysql.createConnection({
+    host: secrets.host,
+    user: secrets.user,
+    password: secrets.password,
+    database: secrets.database,
+    port: secrets.port,
   });
 
-  db.connect((err) => {
+  connection.connect((err) => {
     if (err) {
       console.error("DB connection failed:", err);
       return;
